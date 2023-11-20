@@ -34,8 +34,21 @@ CREATE TABLE Course (
 CREATE TABLE LogIn_Time (
     student_id varchar(10) NOT NULL,
     login_date date NOT NULL,
-    login_time time NOT NULL
+    login_time time NOT NULL,
+    logout_date date NOT NULL,
+    logout_time time NOT NULL,
 );
+
+INSERT INTO Student VALUES
+    ('3035678110', '0000-00-00', "00:00:00"),
+    ('3035678111', '0000-00-00', "00:00:00"),
+    ('3035678112', '0000-00-00', "00:00:00"),
+    ('3035678113', '0000-00-00', "00:00:00"),
+    ('3035678114', '0000-00-00', "00:00:00"),
+    ('3035678115', '0000-00-00', "00:00:00"),
+    ('3035678116', '0000-00-00', "00:00:00"),
+    ('3035678117', '0000-00-00', "00:00:00"),
+    ('3035661360', '0000-00-00', "00:00:00");
 
 CREATE TABLE Record (
     currtime timestamp NOT NULL,
