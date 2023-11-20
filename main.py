@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 import pickle
 import datetime
 import login_page
-import sys, res
+import sys
 import PySimpleGUI as sg
 import time
 
@@ -22,12 +22,13 @@ def auto_login(window):
     gui_confidence = 60
     camera_time_period = 10
     recognized = 0
+    win_started = False
 
     current_time = time.time()
     camera_limit = current_time + camera_time_period
 
-    date_stamp = datetime.datetime.fromtimestamp(time_stamp).strftime("%Y-%m-%d")
-    time_stamp = datetime.datetime.fromtimestamp(time_stamp).strftime("%H:%M:%S")
+    date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
+    time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
     
     labels = {"person_name": 1}
     with open("labels.pickle", "rb") as f:
@@ -37,7 +38,7 @@ def auto_login(window):
     if time.time() < camera_limit:
         recognizer = cv2.face.LBPHFaceRecognizer_create()
         try:
-            recognizer.read("train.ymal")
+            recognizer.read("train.yml")
         except:
             error_msg = "Face Recognition Model has been corrupted or could not be found!"
             print(error_msg)
@@ -50,6 +51,9 @@ def auto_login(window):
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
+
+            if recognized:
+                break
 
             for (x, y, w, h) in faces:
                 roi_gray = gray[y:y+h, x:x+ w]
@@ -69,6 +73,7 @@ def auto_login(window):
 
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
                     recognized = 1
+                    print("your face has been recognized")
                 # If the face is unrecognized
                 else:
                     color = (255, 0, 0)
@@ -84,7 +89,7 @@ def auto_login(window):
             if time.time() > camera_limit:
                 break
 
-            cv2.imshow('Checking your face id', frame)
+            # cv2.imshow('Checking your face id', frame)
             key_wait = cv2.waitKey(10) & 0xff
             if key_wait == 27:
                 break
@@ -110,11 +115,13 @@ def auto_login(window):
                 break
 
         cap.release()
-        cv2.destoryAllWindows()
+        cv2.destroyAllWindows()
 
         if (recognized): 
             # hmm close the window and open the webpage
             window.close()
+            print("Successfully logged in")
+
             # initiate the homepage tk code
             
             # if the user face id has been recognized successfully
@@ -149,16 +156,20 @@ def auto_login(window):
 
 def manual_login(username, password, window):
     query = "SELECT pwd FROM Student WHERE student_id = %s"
-    val = (username)
+    val = (username,)  # Convert username to a tuple
     cursor.execute(query, val)
     result = cursor.fetchall()
 
-    if result[0] == password:
-        window.close()
+    if result:
+        if result[0][0] == password:
+            window.close()
+            print("Successfully logged in")
+        else:
+            print("Wrong PW!")
         # start the homepage code with student id.
     else:
-        # display the msg?
-        return
+        # display the error message
+        print("You are not a student")
 
 
 
@@ -174,10 +185,10 @@ if __name__=="__main__":
     sg.theme('DarkAmber')
 
     # Define the layout of the GUI
-    logo = sg.Image('assets/HKU4.png', size=(300, 350))
+    # logo = sg.Image('assets/HKU4.png', size=(300, 350))
 
     layout = [
-        [sg.Column([[logo]], justification='center')],
+        # [sg.Column([[logo]], justification='center')],
         [sg.Text('Log In', size=(18, 1), font=('Any', 18),
                 text_color='#FFFFFF', justification='center')],
         [sg.Button('😊', size=(5, 1), key='face_button'), sg.Button('EXIT')],
@@ -198,16 +209,17 @@ if __name__=="__main__":
         event, values = window.Read()
 
         # Process the events
-        if event == 'EXIT':
-            break()
+        if not event or event == 'EXIT':
+            break
 
         # Get the values of the username and password inputs
         if event == "Log In":
             username = values['username']
             password = values['password']
+            manual_login(username, password, window)
         
         if event == "face_button":
-            auto_login()
+            auto_login(window)
 
     # Close the window
     window.Close()
