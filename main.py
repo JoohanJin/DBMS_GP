@@ -8,92 +8,99 @@ import sys
 import time
 import sqlite3
 import tkinter.ttk as ttk
-from tkinter import messagebox
-from tkinter import *
 from tkinter import *
 import sqlite3
 import tkinter.ttk as ttk
-from tkinter import messagebox
 import sqlite3
+from PIL import Image, ImageTk
 
 # GLOBAL VARIABLE
 # DB connection 
 db_connection = mysql.connector.connect(host="localhost", user="joe", passwd="1Q2w#E$R!!", database="project")
 cursor = db_connection.cursor()
 recognized = 0
+current_id = ""
 
-class HomePage(Tk):
-    def __init__(self, id, *main, **master):
+class HomePage:
+    def __init__(self, id):
         # get the student id
+        self.root = Tk()
         self.id = id
-        Tk.__init__(self, *main, **master)
+        
 
-        self.geometry('1280x800')
-        self.resizable(0, 0)
-        self.title('Student Login')
-        self.config(bg='white')
+        self.root.geometry('1280x800')
+        self.root.resizable(0, 0)
+        self.root.title('Student Login')
+        self.root.config(bg='white')
 
         global USERNAME
         global PASSWORD
         USERNAME = StringVar()
         PASSWORD = StringVar()
 
-        self._Header = PhotoImage(file="./assets/image/HEADER5.png")
-        self._HeaderLabel = Label(self, image=self._Header, height=300, width=300).place(x=500, y=2000)
+        head_img = Image.open('assets/image/HEADER5.png')
+        head_img = ImageTk.PhotoImage(head_img)
+        # self._Header = PhotoImage(file="./assets/image/HEADER5.png")
+        self.HeaderLabel = Label(self.root, image=head_img, height=300, width=300)#.place(x=500, y=2000)
+        self.HeaderLabel.place(x=500, y = 2000)
 
         self._Footer = PhotoImage(file="assets/image/FOOTER.png")
 
-        self._HeadLabel = Label(self, text='abc', width=100, height=100, bg='#3C6739').place(x=-5500, y=1000)
+        self._HeadLabel = Label(self.root, text='abc', width=100, height=100, bg='#3C6739').place(x=-5500, y=1000)
         self._background = PhotoImage(file='assets/image/Background.gif')
         self._image = PhotoImage(file='assets/image/HomeBackground.gif')
 
-        self._Label1 = Label(self, image=self._background).place(x=0, y=0)
-        self._Label2 = Label(self, image=self._image).place(relx=0.5, rely=0.5, anchor='center', height=450, width=920)
+        self._Label1 = Label(self.root, image=self._background).place(x=0, y=0)
+        self._Label2 = Label(self.root, image=self._image).place(relx=0.5, rely=0.5, anchor='center', height=450, width=920)
 
-        self._HeaderLabel = Label(self, image=self._Header, text='Teacher', width=1277, height=80, bg='#3C6739').place(
+        self._HeaderLabel = Label(self.root, image=head_img, text='Teacher', width=1277, height=80, bg='#3C6739').place(
             x=0, rely=0)
-        self._FooterLabel = Label(self, image=self._Footer, height=40, width=1277, bg='#3C6739').place(x=0.5, y=677)
+        self._FooterLabel = Label(self.root, image=self._Footer, height=40, width=1277, bg='#3C6739').place(x=0.5, y=677)
 
         # Load the dashboard image
         self._dashboard_image = PhotoImage(file='assets/image/Dashboard3.png')
-        self._dashboard_label = Label(self, image=self._dashboard_image, height=588, width=190, bg='#3C6739')
+        self._dashboard_label = Label(self.root, image=self._dashboard_image, height=588, width=190, bg='#3C6739')
         self._dashboard_label.place(x=0, y=85)
 
         # Create buttons for the dashboard
         self._profile_image = PhotoImage(file='assets/image/12.png')
-        self._profile_image_label = Label(self, image=self._profile_image, width=100, height=100, bg='#3C6739')
+        self._profile_image_label = Label(self.root, image=self._profile_image, width=100, height=100, bg='#3C6739')
         self._profile_image_label.place(x=40, y=100)
         
         self._Button1_image = PhotoImage(file='assets/image/Time.png')
-        self._Button1_button = Button(self, image=self._Button1_image, width=170, height=50, bg='#3C6739')
+        self._Button1_button = Button(self.root, image=self._Button1_image, width=170, height=50, bg='#3C6739')
         self._Button1_button.place(x=10, y=310)
 
         self._Button2_image = PhotoImage(file='assets/image/Discussion.png')
-        self._Button2 = Button(self, image=self._Button2_image, width=160, height=40, bg='#3C6739')
+        self._Button2 = Button(self.root, image=self._Button2_image, width=160, height=40, bg='#3C6739')
         self._Button2.place(x=10, y=375)
 
         self._Button3_image = PhotoImage(file='assets/image/Zoom.png')
-        self._Button3 = Button(self, image=self._Button3_image, width=150, height=40, bg='#3C6739')
+        self._Button3 = Button(self.root, image=self._Button3_image, width=150, height=40, bg='#3C6739')
         self._Button3.place(x=10, y=420)
 
         self._Button4_image = PhotoImage(file='assets/image/Lecture Notes.png')
-        self._Button4 = Button(self, image=self._Button4_image, width=160, height=50, bg='#3C6739')
+        self._Button4 = Button(self.root, image=self._Button4_image, width=160, height=50, bg='#3C6739')
         self._Button4.place(x=10, y=250)
 
 
         self._Button5_image = PhotoImage(file='assets/image/Mater1.png')
-        self._Button5 = Button(self, image=self._Button5_image, width=160, height=50, bg='#3C6739')
+        self._Button5 = Button(self.root, image=self._Button5_image, width=160, height=50, bg='#3C6739')
         self._Button5.place(x=3, y=470)
 
         self._Button6_image = PhotoImage(file='assets/image/Email.png')
-        self._Button6 = Button(self, image=self._Button6_image, width=150, height=50, bg='#3C6739')
+        self._Button6 = Button(self.root, image=self._Button6_image, width=150, height=50, bg='#3C6739')
         self._Button6.place(x=10, y=520)
 
         self._Button7_image = PhotoImage(file='assets/image/log3.png')
-        self._Button7 = Button(self, image=self._Button7_image, width=160, height=50, bg='#3C6739')
+        self._Button7 = Button(self.root, image=self._Button7_image, width=160, height=50, bg='#3C6739')
         self._Button7.place(x=10, y=620)
 
-def auto_login(window):
+        self.root.mainloop()
+
+
+def auto_login():
+    global current_id
     global current_time
     global date_stamp
     global time_stamp
@@ -193,17 +200,18 @@ def auto_login(window):
                 break
 
         cap.release()
-        cv2.destroyAllWindows()
+        # cv2.destroyAllWindows()
 
         if (recognized): 
             # hmm close the window and open the webpage
-            window.close()
             print("Successfully logged in")
             # openHomePage(current_id)
 
             # initiate the homepage tk code
 
-def manual_login(username, password, window):
+def manual_login(username, password):
+    global current_id
+    global recognized
     query = "SELECT pwd FROM Student WHERE student_id = %s"
     val = (username,)  # Convert username to a tuple
     cursor.execute(query, val)
@@ -211,10 +219,10 @@ def manual_login(username, password, window):
 
     if result:
         if result[0][0] == password:
-            window.close()
             print("Successfully logged in")
             # openHomePage(username)
             recognized = 1
+            current_id = username
 
         else:
             sg.popup("Wrong PIN")
@@ -225,24 +233,18 @@ def manual_login(username, password, window):
         sg.popup("You are not a student!")
         print("You are not a student")
 
-
-
-
 def register():
     return
-
-
-
 
 if __name__=="__main__":
     # Define PySimpleGUI settings
     sg.theme('DarkAmber')
 
     # Define the layout of the GUI
-    # logo = sg.Image('assets/HKU4.png', size=(300, 350))
+    logo = sg.Image('src/HKU4.png', size=(300, 350))
 
     layout = [
-        # [sg.Column([[logo]], justification='center')],
+        [sg.Column([[logo]], justification='center')],
         [sg.Text('Log In', size=(18, 1), font=('Any', 18),
                 text_color='#FFFFFF', justification='center')],
         [sg.Button('😊', size=(5, 1), key='face_button'), sg.Button('EXIT')],
@@ -271,12 +273,14 @@ if __name__=="__main__":
         if event == "Log In":
             username = values['username']
             password = values['password']
-            manual_login(username, password, window)
+            manual_login(username, password)
         
         if event == "face_button":
-            auto_login(window)
+            auto_login()
+    # window.close()
+    
 
-    # if (recognized):
-    app = HomePage(id)
-    app.mainloop()
+    app = HomePage(current_id)
+    # app.mainloop()
+
     # Close the window
