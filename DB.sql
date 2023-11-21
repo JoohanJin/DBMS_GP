@@ -18,15 +18,65 @@ INSERT INTO Student VALUES
     ('3035661360', "wngks873@connect.hku.hk", "1q2w3e4r!!", "joe");
 
 CREATE TABLE Course (
-    course_id int NOT NULL,
+    course_id varchar(8) NOT NULL,
     course_name varchar(80) NOT NULL,
     teacher_message text NOT NULL,
     tutorial_notes text NOT NULL,
     course_website_link varchar(120) NOT NULL,
     checked BOOLEAN,
     course_start_time time NOT NULL,
-    course_end_time time NOT NULL /* added course start and end time here, deleted from the 'LogIn_Time' table below */
+    course_end_time time NOT NULL, /* added course start and end time here, deleted from the 'LogIn_Time' table below */
+    class_day varchar(10)
+    class_location varchar(10)
 );
+
+INSERT INTO Course VALUES
+    ("COMP3278", "Introduction to database management systems", "Welcome to the course COMP3278", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1060", null, "14:30:00", "15:20:00", "Monday", "MWT1"),
+    ("COMP3278", "Introduction to database management systems", "Welcome to the course COMP3278", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1060", null, "13:30:00", "15:20:00", "Thursday", "MWT1"),
+    
+    ("ELEC3143", "Power Electronics", "Welcome to the course ELEC3143", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1059", null, "09:30:00", "10:20:00", "Tuesday", "CBC"),
+    ("ELEC3143", "Power Electronics", "Welcome to the course ELEC3143", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1059", null, "09:30:00", "11:20:00", "Friday", "CBC"),
+    
+    ("MECH2407", "Multivariable calculus and partial differential equations", "Welcome to the course MECH2407", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1060", null, "10:30:00", "11:20:00", "Tuesday", "TT404"),
+    ("MECH2407", "Multivariable calculus and partial differential equations ", "Welcome to the course MECH2407", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1060", null, "10:30:00", "11:20:00", "Thursday", "TT404"),
+
+    ("BSTC2022", "Evolution of Buddhist meditation", "Welcome to the course BSTC2022", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "16:30:00", "18:20:00", "Thursday", "CPD 2.16"),
+
+    ("CHIN9511", "Cantonese as a foreign language I", "Welcome to the course CHIN9511", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "12:30:00", "14:20:00", "Monday", "CPD LG.37"),
+    ("CHIN9511", "Cantonese as a foreign language I", "Welcome to the course CHIN9511", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "12:30:00", "14:20:00", "Friday", "CPD G.03"),
+
+    ("ACCT4104", "Advanced financial accounting", "Welcome to the course ACCT4104", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "14:30:00", "17:20:00", "Monday", "LE2"),
+    
+    ("ACCT3106", "Management control", "Welcome to the course ACCT3106", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "11:30:00", "12:20:00", "Monday", "CYPP2"),
+    ("ACCT3106", "Management control", "Welcome to the course ACCT3106", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "10:30:00", "12:20:00", "Thursday", "CYPP2"),
+
+    ("BIOL4411", "Plant and food biotechnology", "Welcome to the course BIOL4411", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "09:30:00", "11:20:00", "Monday", "MB141"),
+
+    ("COMP3271", "Computer graphics", "Welcome to the course COMP3271", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "12:30:00", "14:20:00", "Monday", "CBA"),
+    ("COMP3271", "Computer graphics", "Welcome to the course COMP3271", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "12:30:00", "13:20:00", "Thursday", "CBA"),
+
+    ("COMP3230", "Principles of operating systems", "Welcome to the course COMP3230", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "10:30:00", "12:20:00", "Tuesday", "LE4"),
+    ("COMP3230", "Principles of operating systems", "Welcome to the course COMP3230", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "10:30:00", "12:20:00", "Thursday", "LE4"),
+
+    ("CCGL9042", "The evolution of civilization", "Welcome to the course CCGL9042", "Check the website", 
+    "https://moodle.hku.hk/course/index.php?categoryid=1037", null, "16:30:00", "18:20:00", "Wednesday", "MB226"),
 
 CREATE TABLE LogIn_Time (
     student_id varchar(10) NOT NULL,
