@@ -30,15 +30,15 @@ INSERT INTO Student_takingcourses VALUES
     ('3035661360', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}');
 
 CREATE TABLE Course (
-    course_id varchar(8) NOT NULL,
-    course_name varchar(80) NOT NULL,
+    course_id varchar(9) NOT NULL,
+    course_name varchar(512) NOT NULL,
     teacher_message text NOT NULL,
     tutorial_notes text NOT NULL,
-    course_website_link varchar(120) NOT NULL,
+    course_website_link varchar(512) NOT NULL,
     checked BOOLEAN,
     course_start_time time NOT NULL,
     course_end_time time NOT NULL,
-    class_day varchar(10)
+    class_day varchar(16),
     class_location varchar(10)
 );
 

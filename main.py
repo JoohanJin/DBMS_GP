@@ -23,8 +23,8 @@ import io
 # DB connection 
 db_connection = mysql.connector.connect(host="localhost", user="joe", passwd="1Q2w#E$R!!", database="project")
 cursor = db_connection.cursor()
-recognized = 0
 current_id = ""
+recognized = 0
 
 class HomePage:
     def __init__(self, id):
@@ -59,8 +59,6 @@ class HomePage:
         cursor.execute(update_time, val)
         db_connection.commit()
 
-
-
         query = "SELECT email, username FROM Student WHERE student_id = %s"
         val = (self.id,)
         
@@ -80,7 +78,19 @@ class HomePage:
         result = cursor.fetchone()
         course_codes_taking = result
         
-        course_to_take = course_codes_taking[0].strip('{}').split() 
+        courses_to_take = course_codes_taking[0].strip('{}').split()
+        current_datetime = datetime.datetime.fromtimestamp(current_time)
+        day_info = current_datetime.strftime("%A")
+        print(day_info)
+
+        query = "SELECT course_id, course_start_time, class_day FROM Course WHERE course_id = %s"
+        for course in courses_to_take:
+            val = (course, )
+            cursor.execute(query, val)
+            result = cursor.fetchall()
+            print(result)
+            
+
 
         query = "SELECT time_table_image FROM TimeTable WHERE student_id = %s"
         val = (id,)
@@ -209,198 +219,193 @@ class HomePage:
             self.root.destroy()
 
 
-def auto_login():
-    global current_id
-    global current_time
-    global date_stamp
-    global time_stamp
-    global recognized
-    gui_confidence = 60
-    camera_time_period = 10
-    win_started = False
+class LogInPage:
+    def __init__(self):
+        self.root = Tk()
+        self.root.title("Login Form")
+        self.root.geometry("550x550")  # Set the size of the window
 
-    current_time = time.time()
-    camera_limit = current_time + camera_time_period
+        # Load background image
+        self.bg_image = ImageTk.PhotoImage(Image.open("assets/image/HKU.png"))
+        self.bg_label = Label(self.root, image=self.bg_image)
+        self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-    date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
-    time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
-    
-    labels = {"person_name": 1}
-    with open("labels.pickle", "rb") as f:
-        labels = pickle.load(f)
-        labels = {v: k for k, v in labels.items()}
+        # Create labels
+        self.username_image = ImageTk.PhotoImage(Image.open("assets/image/User.png"))
+        self.label_username = Label(self.root, image=self.username_image, height=45, width=90, bg='gray')
+        self.label_username.place(x=130, y=330, anchor=CENTER)
 
-    if time.time() < camera_limit:
-        recognizer = cv2.face.LBPHFaceRecognizer_create()
-        try:
-            recognizer.read("train.yml")
-        except:
-            error_msg = "Face Recognition Model has been corrupted or could not be found!"
-            print(error_msg)
-            # display msg?
+        self.password_image = ImageTk.PhotoImage(Image.open("assets/image/PW.png"))
+        self.label_password = Label(self.root, image=self.password_image, height=45, width=90, bg='white')
+        self.label_password.place(x=130, y=430, anchor=CENTER)
 
-        face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
-        cap = cv2.VideoCapture(0)
+        # Create input fields
+        self.entry_username = Entry(self.root, bg="white", relief=FLAT)
+        self.entry_username.place(x=130, y=370, anchor=CENTER)
+
+
+        self.entry_password = Entry(self.root, bg="white", show="*", relief=FLAT)
+        self.entry_password.place(x=130, y=470, anchor=CENTER)
+
+        # Create login button
+        login_image = ImageTk.PhotoImage(Image.open("assets/image/login2.png"))
+        login_button = Button(self.root, image=login_image, command=self.manual_login, height=40, width=90, bg='white')
+        login_button.place(x=380, y=450, anchor=CENTER)
+
+        # Load image for another button
+        image = ImageTk.PhotoImage(Image.open("assets/image/loginface.png"))
+
+        # Create button with image and circular border
+        image_button = Button(self.root, command=self.auto_login, image=image, height=78, width=100, bg='white')
+        image_button.place(x=380, y=350, anchor=CENTER)
+
+        if recognized:
+            self.root.destroy()
+        elif not recognized:
+            self.root.mainloop()
+
+    def auto_login(self):
+        global current_id
+        global current_time
+        global date_stamp
+        global time_stamp
+        global recognized
+        gui_confidence = 60
+        camera_time_period = 10
+        win_started = False
+
+        current_time = time.time()
+        camera_limit = current_time + camera_time_period
+
+        date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
+        time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
         
-        while True:
-            ret, frame = cap.read()
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
+        labels = {"person_name": 1}
+        with open("labels.pickle", "rb") as f:
+            labels = pickle.load(f)
+            labels = {v: k for k, v in labels.items()}
 
-            if recognized:
-                break
+        if time.time() < camera_limit:
+            recognizer = cv2.face.LBPHFaceRecognizer_create()
+            try:
+                recognizer.read("train.yml")
+            except:
+                error_msg = "Face Recognition Model has been corrupted or could not be found!"
+                print(error_msg)
+                # display msg?
 
-            for (x, y, w, h) in faces:
-                roi_gray = gray[y:y+h, x:x+ w]
-                roi_color = frame[y:y+h, x:x+w]
-                id_, conf = recognizer.predict(roi_gray)
-
-                if conf >= gui_confidence:
-                    font = cv2.QT_FONT_NORMAL
-                    if id_ == 0:
-                        id = "3035661360"
-                    current_id = id
-                    color = (255, 0, 0)
-                    stroke = 2
-
-                    # name = labels[id_]
-                    # cv2.putText(frame, name,(x, y), font, 1, color, stroke, cv2.LINE_AA)
-
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
-                    recognized = 1
-                    print("your face has been recognized")
-                # If the face is unrecognized
-                else:
-                    color = (255, 0, 0)
-                    stroke = 2
-                    font = cv2.QT_FONT_NORMAL
-                    cv2.putText(frame, "UNKNOWN", (x, y), font, 1, color, stroke, cv2.LINE_AA)
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
-                    hello = ("Your face is not recognized")
-                    print(hello)
-                    # engine.say(hello)
-                    # engine.runAndWait()
+            face_cascade = cv2.CascadeClassifier('haarcascade/haarcascade_frontalface_default.xml')
+            cap = cv2.VideoCapture(0)
             
-            if time.time() > camera_limit:
-                break
+            while True:
+                ret, frame = cap.read()
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
 
-            # cv2.imshow('Checking your face id', frame)
-            key_wait = cv2.waitKey(10) & 0xff
-            if key_wait == 27:
-                break
+                if recognized:
+                    break
 
-            # GUI
-            imgbytes = cv2.imencode('.png', frame)[1].tobytes() 
-            if not win_started:
-                win_started = True
-                layout = [
-                    [sg.Text('Attendance System Interface', size=(30,1))],
-                    [sg.Image(data=imgbytes, key='_IMAGE_')],
-                ]
-                win = sg.Window('Attendance System',
-                        default_element_size=(14, 1),
-                        text_justification='right',
-                        auto_size_text=False).Layout(layout).Finalize()
-                image_elem = win.FindElement('_IMAGE_')
-            else:
-                image_elem.Update(data=imgbytes)
+                for (x, y, w, h) in faces:
+                    roi_gray = gray[y:y+h, x:x+ w]
+                    roi_color = frame[y:y+h, x:x+w]
+                    id_, conf = recognizer.predict(roi_gray)
 
-            event, values = win.Read(timeout=20)
-            # if event is None or event == 'Exit':
-            #     break
+                    if conf >= gui_confidence:
+                        font = cv2.QT_FONT_NORMAL
+                        if id_ == 0:
+                            id = "3035661360"
+                        current_id = id
+                        color = (255, 0, 0)
+                        stroke = 2
 
-        cap.release()
-        # cv2.destroyAllWindows()
+                        # name = labels[id_]
+                        # cv2.putText(frame, name,(x, y), font, 1, color, stroke, cv2.LINE_AA)
+
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
+                        recognized = 1
+                        print("your face has been recognized")
+                    # If the face is unrecognized
+                    else:
+                        color = (255, 0, 0)
+                        stroke = 2
+                        font = cv2.QT_FONT_NORMAL
+                        cv2.putText(frame, "UNKNOWN", (x, y), font, 1, color, stroke, cv2.LINE_AA)
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), (2))
+                        hello = ("Your face is not recognized")
+                        print(hello)
+                        # engine.say(hello)
+                        # engine.runAndWait()
+                
+                if time.time() > camera_limit:
+                    break
+
+                # cv2.imshow('Checking your face id', frame)
+                key_wait = cv2.waitKey(10) & 0xff
+                if key_wait == 27:
+                    break
+
+                # GUI
+                imgbytes = cv2.imencode('.png', frame)[1].tobytes() 
+                if not win_started:
+                    win_started = True
+                    layout = [
+                        [sg.Text('Attendance System Interface', size=(30,1))],
+                        [sg.Image(data=imgbytes, key='_IMAGE_')],
+                    ]
+                    win = sg.Window('Attendance System',
+                            default_element_size=(14, 1),
+                            text_justification='right',
+                            auto_size_text=False).Layout(layout).Finalize()
+                    image_elem = win.FindElement('_IMAGE_')
+                else:
+                    image_elem.Update(data=imgbytes)
+
+                event, values = win.Read(timeout=20)
+                # if event is None or event == 'Exit':
+                #     break
+
+            cap.release()
+            cv2.destroyAllWindows()
 
         if (recognized): 
             # hmm close the window and open the webpage
             print("Successfully logged in")
+            self.root.destroy()
+            HomePage(current_id)
             # openHomePage(current_id)
 
             # initiate the homepage tk code
 
-def manual_login(username, password):
-    global current_id
-    global recognized
-    query = "SELECT pwd FROM Student WHERE student_id = %s"
-    val = (username,)  # Convert username to a tuple
-    cursor.execute(query, val)
-    result = cursor.fetchall()
+    def manual_login(self):
+        global recognized
+        username = self.entry_username.get()
+        password = self.entry_password.get()
 
-    if result:
-        if result[0][0] == password:
-            print("Successfully logged in")
-            # openHomePage(username)
-            recognized = 1
-            current_id = username
+        global current_id
+        query = "SELECT pwd FROM Student WHERE student_id = %s"
+        val = (username,)  # Convert username to a tuple
+        cursor.execute(query, val)
+        result = cursor.fetchall()
 
+        if result:
+            if result[0][0] == password:
+                print("Successfully logged in")
+                # openHomePage(username)
+                recognized = 1
+                current_id = username
+
+            else:
+                messagebox.showerror("Login Error", "Incorrect Password")
+                print("Wrong PW!")
+            # start the homepage code with student id.
         else:
-            sg.popup("Wrong PIN")
-            print("Wrong PW!")
-        # start the homepage code with student id.
-    else:
-        # display the error message
-        sg.popup("You are not a student!")
-        print("You are not a student")
-
-def register():
-    return
+            # display the error message
+            messagebox.showerror("Login Error", "You are not a student")
+            print("You are not a student")
+        if recognized:
+            self.root.destroy()
+            webapp = HomePage(current_id)
 
 if __name__=="__main__":
-    # Define PySimpleGUI settings
-    sg.theme('DarkAmber')
-
-    # Define the layout of the GUI
-    logo = sg.Image('src/HKU4.png', size=(300, 350))
-
-    layout = [
-        [sg.Column([[logo]], justification='center')],
-        [sg.Text('Log In', size=(18, 1), font=('Any', 18),
-                text_color='#FFFFFF', justification='center')],
-        [sg.Button('😊', size=(5, 1), key='face_button'), sg.Button('EXIT')],
-        [sg.Text('Student ID:'), sg.Input(key='username')],
-        [sg.Text('Password:'), sg.Input(key='password', password_char='*')],
-        [sg.Column([[sg.Button('Log In'), sg.Text('Forgot Password?')]], justification='center')],
-    ]
-
-    # Create the window
-    window = sg.Window('ICMS Portal',
-                    default_element_size=(30, 1),
-                    element_justification='c',
-                    text_justification='right',
-                    auto_size_text=False).Layout(layout)
-
     # Read events and values from the window
-    recognized = 1
-    while not recognized:
-        event, values = window.Read()
-
-        # Process the events
-        if not event or event == 'EXIT':
-            break
-
-        # Get the values of the username and password inputs
-        if event == "Log In":
-            username = values['username']
-            password = values['password']
-            manual_login(username, password)
-        
-        if event == "face_button":
-            auto_login()
-    window.close()
-    
-    current_id = 3035661360
-    app = HomePage(current_id)
-    # app.mainloop()
-    # root = Tk()
-    # root.title("title")
-
-    # img = Image.open("src/HKU4.png")
-    # bg = ImageTk.PhotoImage(img)
-
-    # label = Label(root, image=bg)
-    # label.place(x=0, y=0)
-
-    # mainloop()
-
-    # Close the window
+    login_app = LogInPage()
