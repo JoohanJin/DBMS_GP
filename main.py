@@ -124,35 +124,22 @@ def auto_login(window):
 
             # initiate the homepage tk code
             
-            # if the user face id has been recognized successfully
-            # update the database with the new login time finding the student id
-            # query = "SELECT student_id, name, login_date, login_time, login_date FROM Student WHERE name='%s'" % (current_id)
-            # query = "UPDATE "
-            # select = cursor.execute(query)
-            # result = cursor.fetchall()
-            # print(result)
-            # data = "error"
 
-        # for x in result:
-        #     data = x
-
-        # If the student's information is not found in the database
-        # if data == "error":
-        #     # the student's data is not in the database
-        #     print("The student", current_id, "is NOT FOUND in the database.")
-
-        # If your face_id cannot be recognized
-        # else:
-        #     update =  "UPDATE Student SET login_date=%s WHERE name=%s"
-        #     # update = "UPDATE test SET date_of_join=%s WHERE name=%s"
-        #     val = (date_stamp, current_id)
-        #     cursor.execute(update, val)
-        #     update = "UPDATE Student SET login_time=%s WHERE name=%s"
-        #     # update = "UPDATE test SET date_of_join=%s WHERE name=%s"
-        #     val = (current_time, current_id)
-        #     cursor.execute(update, val)
-        #     db_connection.commit()
     return
+
+def show_notification(message):
+    notification_layout = [
+        [sg.Text(message)],
+        [sg.Button('OK')]
+    ]
+    notification_window = sg.Window('Notification', notification_layout)
+
+    while True:
+        event, values = notification_window.read()
+        if event == sg.WINDOW_CLOSED or event == 'OK':
+            break
+
+    notification_window.close()
 
 def manual_login(username, password, window):
     query = "SELECT pwd FROM Student WHERE student_id = %s"
@@ -165,10 +152,12 @@ def manual_login(username, password, window):
             window.close()
             print("Successfully logged in")
         else:
+            sg.popup("Wrong PIN")
             print("Wrong PW!")
         # start the homepage code with student id.
     else:
         # display the error message
+        sg.popup("You are not a student!", size=(300, 200))
         print("You are not a student")
 
 
@@ -199,7 +188,7 @@ if __name__=="__main__":
 
     # Create the window
     window = sg.Window('ICMS Portal',
-                    default_element_size=(21, 1),
+                    default_element_size=(30, 1),
                     element_justification='c',
                     text_justification='right',
                     auto_size_text=False).Layout(layout)
