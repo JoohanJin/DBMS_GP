@@ -39,7 +39,7 @@ entry_password.place(x=130, y=470, anchor=CENTER)
 
 # Create login button
 login_image = ImageTk.PhotoImage(Image.open("/Users/zec/Desktop/Pic2/login2.png"))
-login_button = Button(root, image=login_image, height=40, width=90, bg='white')
+login_button = Button(root, image=login_image, command=login, height=40, width=90, bg='white')
 login_button.place(x=380, y=450, anchor=CENTER)
 
 # Load image for another button
