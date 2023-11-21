@@ -16,6 +16,7 @@ from PIL import Image, ImageTk
 import smtplib
 import webbrowser
 from email.message import EmailMessage
+import io
 
 # GLOBAL VARIABLE
 # DB connection 
@@ -26,11 +27,15 @@ current_id = ""
 
 class HomePage:
     def __init__(self, id):
+        global current_time
+        global date_stamp
+        global time_stamp
+
         # get the student id
         self.root = Tk()
         self.id = id
 
-        query = "SELECT login_date, login_time FROM LogIn_Time WHERE student_id = %s"
+        query = "SELECT login_date, login_time, logout_date, logout_time FROM LogIn_Time WHERE student_id = %s"
         val = (id,)
 
         cursor.execute(query, val)
@@ -38,6 +43,19 @@ class HomePage:
 
         last_login_timestamp = result[0][1]
         last_login_datestamp = result[0][0]
+        last_login_timestamp = result[0][2]
+        last_login_datestamp = result[0][3]
+
+        current_time = time.time()
+        date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
+        time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
+
+        update_time = "UPDATE LogIn_Time SET login_date = %s, login_time = %s WHERE student_id = %s"
+        val = (date_stamp, time_stamp, id, )
+        cursor.execute(update_time, val)
+        db_connection.commit()
+
+
 
         query = "SELECT email, username FROM Student WHERE student_id = %s"
         val = (id,)
@@ -49,15 +67,35 @@ class HomePage:
         self.student_name = result[0][1]
 
         self.welcome_message = f"Hello, {self.student_name}. Welcome to HKU Student Website!"
-
         cursor.execute(query, val)
         result = cursor.fetchall()
         
+        query = "SELECT course_id FROM Student_takingcourses WHERE student_id = %s"
+        val = (id,)
+        cursor.execute(query, val)
+        result = cursor.fetchone()
+        course_codes_taking = result
+
+        query = "SELECT time_table_image FROM TimeTable WHERE student_id = %s"
+        val = (id,)
+        cursor.execute(query, val)
+        image_result = cursor.fetchone()
+
+        if image_result:
+            image_data = image_result[0]
+            image_stream = io.BytesIO(image_data)
+            timetable_image = Image.open(image_stream)
+            self._image = ImageTk.PhotoImage(timetable_image)
+        else:
+            self._image = PhotoImage(file='assets/image/HomeBackground.gif')
+
 
         self.root.geometry('1280x800')
         self.root.resizable(0, 0)
         self.root.title('Student Login')
         self.root.config(bg='white')
+
+        
 
         global USERNAME
         global PASSWORD
@@ -74,7 +112,7 @@ class HomePage:
 
         self._HeadLabel = Label(self.root, text='abc', width=100, height=100, bg='#3C6739').place(x=-5500, y=1000)
         self._background = PhotoImage(file='assets/image/Background.gif')
-        self._image = PhotoImage(file='assets/image/HomeBackground.gif')
+
 
         self._Label1 = Label(self.root, image=self._background).place(x=0, y=0)
         self._Label2 = Label(self.root, image=self._image).place(relx=0.5, rely=0.5, anchor='center', height=450, width=920)
