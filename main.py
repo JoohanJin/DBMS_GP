@@ -13,6 +13,9 @@ import sqlite3
 import tkinter.ttk as ttk
 import sqlite3
 from PIL import Image, ImageTk
+import smtplib
+import webbrowser
+from email.message import EmailMessage
 
 # GLOBAL VARIABLE
 # DB connection 
@@ -26,6 +29,29 @@ class HomePage:
         # get the student id
         self.root = Tk()
         self.id = id
+
+        query = "SELECT login_date, login_time FROM LogIn_Time WHERE student_id = %s"
+        val = (id,)
+
+        cursor.execute(query, val)
+        result = cursor.fetchall()
+
+        last_login_timestamp = result[0][1]
+        last_login_datestamp = result[0][0]
+
+        query = "SELECT email, username FROM Student WHERE student_id = %s"
+        val = (id,)
+        
+        cursor.execute(query, val)
+        result = cursor.fetchall()
+
+        self.student_email = result[0][0]
+        self.student_name = result[0][1]
+
+        self.welcome_message = f"Hello, {self.student_name}. Welcome to HKU Student Website!"
+
+        cursor.execute(query, val)
+        result = cursor.fetchall()
         
 
         self.root.geometry('1280x800')
@@ -97,6 +123,31 @@ class HomePage:
         self._Button7.place(x=10, y=620)
 
         self.root.mainloop()
+    
+    def send_email(self):        # Replace the email address / create App Password in Gmail for new email. 
+        email = self.student_email #https://www.youtube.com/watch?v=hSnd8iYBiIg 
+
+        subject = "Course Information"
+        message = f"Course: {self.course_label['text']}\n" \
+                f"Classroom Address: {self.address_label['text']}\n" \
+                f"Teacher's Message: {self.message_label['text']}\n" \
+                f"Zoom Link: {self.zoom_label['text']}\n" \
+                f"Lecture Notes: {self.notes_label['text']}\n"
+
+
+        msg = EmailMessage()
+        msg.set_content(message)
+        msg['Subject'] = subject
+        msg['From'] = "1@gmail.com"  # Replace with your email address
+        msg['To'] = "1@gmail.com"
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login("1@gmail.com", "1")  # Replace with your email / pw
+            server.send_message(msg)
+
+        # Clear email entry
+        self.email_entry.delete(0, self.root.tk.END)
 
 
 def auto_login():
@@ -196,8 +247,8 @@ def auto_login():
                 image_elem.Update(data=imgbytes)
 
             event, values = win.Read(timeout=20)
-            if event is None or event == 'Exit':
-                break
+            # if event is None or event == 'Exit':
+            #     break
 
         cap.release()
         # cv2.destroyAllWindows()
@@ -261,7 +312,7 @@ if __name__=="__main__":
                     auto_size_text=False).Layout(layout)
 
     # Read events and values from the window
-    # recognized = 1
+    recognized = 1
     while not recognized:
         event, values = window.Read()
 
@@ -277,10 +328,20 @@ if __name__=="__main__":
         
         if event == "face_button":
             auto_login()
-    # window.close()
+    window.close()
     
-
+    current_id = 3035661360
     app = HomePage(current_id)
     # app.mainloop()
+    # root = Tk()
+    # root.title("title")
+
+    # img = Image.open("src/HKU4.png")
+    # bg = ImageTk.PhotoImage(img)
+
+    # label = Label(root, image=bg)
+    # label.place(x=0, y=0)
+
+    # mainloop()
 
     # Close the window
