@@ -23,23 +23,38 @@ class CourseGUI(tk.Tk):
         self.course_label = tk.Label(self, image=self._course_label_image, width=150, height=40, bg='#3C6739')
         self.course_label.place(x=50, y=20, anchor=CENTER)
 
+        self.text_label1 = Label(self, text='a' , font=('Times New Roman', 24), compound ='center')
+        self.text_label1.place(x=100, y=20, anchor='center')
+
         self.address_label_image = tk.PhotoImage(file='/Users/zec/Desktop/Pic2/notiaddre.png')
         self.address_label = tk.Label(self, image=self.address_label_image, width=200, height=30, bg='#3C6739')
         self.address_label.place(x=110, y=80, anchor=CENTER)
+
+        self.text_label2 = Label(self, text='a' , font=('Times New Roman', 24), compound ='center')
+        self.text_label2.place(x=210, y=80, anchor='center')
 
         self.message_label_image = tk.PhotoImage(file='/Users/zec/Desktop/Pic2/notiteacher.png')
         self.message_label = tk.Label(self, image=self.message_label_image, width=210, height=30, bg='#3C6739')
         self.message_label.place(x=115, y=140, anchor=CENTER)
 
+        self.text_label3 = Label(self, text='a' , font=('Times New Roman', 24), compound ='center')
+        self.text_label3.place(x=205, y=140, anchor='center')
 
         self.zoom_label_image = tk.PhotoImage(file='/Users/zec/Desktop/Pic2/notizoom.png')
         self.zoom_label = tk.Label(self, image=self.zoom_label_image, width=120, height=40, bg='#3C6739')
         self.zoom_label.place(x=60, y=210, anchor=CENTER)
 
+        self.text_label4 = Label(self, text='a' , font=('Times New Roman', 24), compound ='center')
+        self.text_label4.place(x=125, y=210, anchor='center')
+        
+
 
         self.notes_label_image = tk.PhotoImage(file='/Users/zec/Desktop/Pic2/notilec.png')
         self.notes_label = tk.Label(self, image=self.notes_label_image, width=190, height=40, bg='#3C6739')
         self.notes_label.place(x=110, y=250, anchor=CENTER)
+
+        self.text_label5 = Label(self, text='a' , font=('Times New Roman', 24), compound ='center')
+        self.text_label5.place(x=170, y=250, anchor='center')
 
         # Create buttons for Zoom and Lecture Notes
 
