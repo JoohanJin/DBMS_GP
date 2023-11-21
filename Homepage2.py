@@ -3,6 +3,8 @@ import sqlite3
 import tkinter.ttk as ttk
 import datetime
 from tkinter import messagebox
+import subprocess
+import time
 
 class HomeWindow(Tk):
     def __init__(self, *main, **master):
@@ -89,6 +91,17 @@ class HomeWindow(Tk):
 
         login_time = datetime.datetime.now().strftime("%H:%M:%S")
         self.text_label2.config(text='You have logged in at ' + login_time)
+
+      # Operation of New file
+
+    time.sleep(5)  # Wait for 5 seconds
+
+    try:
+        subprocess.Popen(["python", "/Users/zec/Desktop/Notif.py"])
+        flag = True
+    except FileNotFoundError:
+        flag = False
+
 
 
 if __name__ == "__main__":
