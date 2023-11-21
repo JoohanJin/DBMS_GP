@@ -10,6 +10,13 @@ CREATE TABLE Student_takingcourses (
     course_id varchar(1024) NOT NULL
 );
 
+/* student information in who's taking which courses */
+
+INSERT INTO Student_takingcourses VALUES
+    ('3035678110', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}'),
+    ('3035678111', '{COMP3278 GEOG1021 MECH4412 IMSE4175}'),
+    ('3035661360', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}');
+
 /* student information inserting into student values */
 INSERT INTO Student VALUES 
     ('3035678110', "kyoungmin2@connect.hku.hk", "qkrrudals123!@", "Jamie"),
@@ -22,12 +29,7 @@ INSERT INTO Student VALUES
     ('3035678117', "yuhyun2@connect.hku.hk", "dldbgus123!@", "Mindy"),
     ('3035661360', "wngks873@connect.hku.hk", "1q2w3e4r!!", "joe");
 
-/* student information in who's taking which courses */
 
-INSERT INTO Student_takingcourses VALUES
-    ('3035678110', '{"COMP3278", "ELEC3143", "MECH2407", "ELEC2243", "BSTC2022"}'),
-    ('3035678111', '{"COMP3278", "GEOG1021", "MECH4412", "IMSE4175"}'),
-    ('3035661360', '{"COMP3278, "ELEC3143, "MECH2407, "ELEC2243", "BSTC2022"}');
 
 CREATE TABLE Course (
     course_id varchar(8) NOT NULL,

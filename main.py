@@ -8,6 +8,7 @@ import sys
 import time
 import sqlite3
 import tkinter.ttk as ttk
+from tkinter import messagebox
 from tkinter import *
 import sqlite3
 import tkinter.ttk as ttk
@@ -43,22 +44,25 @@ class HomePage:
 
         last_login_timestamp = result[0][1]
         last_login_datestamp = result[0][0]
-        last_login_timestamp = result[0][2]
-        last_login_datestamp = result[0][3]
+        last_logout_datestamp = result[0][2]
+        last_logout_timestamp = result[0][3]
+
+        # print(f"last log in: {last_login_datestamp} {last_login_timestamp}\nlast log out: {last_logout_datestamp} {last_logout_timestamp}")
 
         current_time = time.time()
-        date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
-        time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
+        self.date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
+        self.time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
 
+        # login time and login date update
         update_time = "UPDATE LogIn_Time SET login_date = %s, login_time = %s WHERE student_id = %s"
-        val = (date_stamp, time_stamp, id, )
+        val = (self.date_stamp, self.time_stamp, id, )
         cursor.execute(update_time, val)
         db_connection.commit()
 
 
 
         query = "SELECT email, username FROM Student WHERE student_id = %s"
-        val = (id,)
+        val = (self.id,)
         
         cursor.execute(query, val)
         result = cursor.fetchall()
@@ -66,7 +70,7 @@ class HomePage:
         self.student_email = result[0][0]
         self.student_name = result[0][1]
 
-        self.welcome_message = f"Hello, {self.student_name}. Welcome to HKU Student Website!"
+        self.welcome_message = f"Hello, {self.student_name}. Welcome to HKU Student Website!\nYour last login time is {last_login_datestamp} {last_login_timestamp}."
         cursor.execute(query, val)
         result = cursor.fetchall()
         
@@ -75,6 +79,9 @@ class HomePage:
         cursor.execute(query, val)
         result = cursor.fetchone()
         course_codes_taking = result
+        
+        print(course_codes_taking[0].strip('{}').strip('"').split())
+
 
         query = "SELECT time_table_image FROM TimeTable WHERE student_id = %s"
         val = (id,)
@@ -160,6 +167,7 @@ class HomePage:
         self._Button7 = Button(self.root, image=self._Button7_image, width=160, height=50, bg='#3C6739')
         self._Button7.place(x=10, y=620)
 
+        self.root.protocol('WM_DELETE_WINDOW', self.on_close)
         self.root.mainloop()
     
     def send_email(self):        # Replace the email address / create App Password in Gmail for new email. 
@@ -186,6 +194,20 @@ class HomePage:
 
         # Clear email entry
         self.email_entry.delete(0, self.root.tk.END)
+
+    def on_close(self):
+        current_time = time.time()
+        date_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%Y-%m-%d")
+        time_stamp = datetime.datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
+
+        time_update_query = "UPDATE LogIn_Time SET logout_date = %s, logout_time = %s WHERE student_id = %s"
+        val = (date_stamp, time_stamp, self.id,)
+        response=messagebox.askyesno('Exit', 'Are you sure you want to exit?')
+        if response:
+            cursor.execute(time_update_query, val)
+            db_connection.commit()
+
+            self.root.destroy()
 
 
 def auto_login():
