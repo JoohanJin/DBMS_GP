@@ -7,7 +7,7 @@ CREATE TABLE Student (
 
 CREATE TABLE Student_takingcourses (
     student_id varchar(10) NOT NULL,
-    course_id varchar(40) NOT NULL,
+    course_id varchar(1024) NOT NULL
 );
 
 /* student information inserting into student values */
