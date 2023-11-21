@@ -80,8 +80,7 @@ class HomePage:
         result = cursor.fetchone()
         course_codes_taking = result
         
-        print(course_codes_taking[0].strip('{}').strip('"').split())
-
+        course_to_take = course_codes_taking[0].strip('{}').split() 
 
         query = "SELECT time_table_image FROM TimeTable WHERE student_id = %s"
         val = (id,)

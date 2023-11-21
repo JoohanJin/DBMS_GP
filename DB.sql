@@ -5,18 +5,6 @@ CREATE TABLE Student (
     username varchar(80) NOT NULL
 );
 
-CREATE TABLE Student_takingcourses (
-    student_id varchar(10) NOT NULL,
-    course_id varchar(1024) NOT NULL
-);
-
-/* student information in who's taking which courses */
-
-INSERT INTO Student_takingcourses VALUES
-    ('3035678110', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}'),
-    ('3035678111', '{COMP3278 GEOG1021 MECH4412 IMSE4175}'),
-    ('3035661360', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}');
-
 /* student information inserting into student values */
 INSERT INTO Student VALUES 
     ('3035678110', "kyoungmin2@connect.hku.hk", "qkrrudals123!@", "Jamie"),
@@ -30,6 +18,16 @@ INSERT INTO Student VALUES
     ('3035661360', "wngks873@connect.hku.hk", "1q2w3e4r!!", "joe");
 
 
+CREATE TABLE Student_takingcourses (
+    student_id varchar(10) NOT NULL,
+    course_id varchar(1024) NOT NULL
+);
+
+/* student information in who's taking which courses */
+INSERT INTO Student_takingcourses VALUES
+    ('3035678110', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}'),
+    ('3035678111', '{COMP3278 GEOG1021 MECH4412 IMSE4175}'),
+    ('3035661360', '{COMP3278 ELEC3143 MECH2407 ELEC2243 BSTC2022}');
 
 CREATE TABLE Course (
     course_id varchar(8) NOT NULL,
@@ -39,7 +37,7 @@ CREATE TABLE Course (
     course_website_link varchar(120) NOT NULL,
     checked BOOLEAN,
     course_start_time time NOT NULL,
-    course_end_time time NOT NULL, /* added course start and end time here, deleted from the 'LogIn_Time' table below */
+    course_end_time time NOT NULL,
     class_day varchar(10)
     class_location varchar(10)
 );
