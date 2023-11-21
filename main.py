@@ -8,7 +8,7 @@ import login_page
 import sys
 import PySimpleGUI as sg
 import time
-
+from HomePage import *
 # GLOBAL VARIABLE
 # DB connection 
 db_connection = mysql.connector.connect(host="localhost", user="joe", passwd="1Q2w#E$R!!", database="project")
@@ -120,6 +120,7 @@ def auto_login(window):
         if (recognized): 
             # hmm close the window and open the webpage
             window.close()
+            openHomepage(id)
             print("Successfully logged in")
 
             # initiate the homepage tk code
@@ -151,6 +152,7 @@ def manual_login(username, password, window):
         if result[0][0] == password:
             window.close()
             print("Successfully logged in")
+            openHomepage(username)
         else:
             sg.popup("Wrong PIN")
             print("Wrong PW!")
@@ -181,7 +183,7 @@ if __name__=="__main__":
         [sg.Text('Log In', size=(18, 1), font=('Any', 18),
                 text_color='#FFFFFF', justification='center')],
         [sg.Button('😊', size=(5, 1), key='face_button'), sg.Button('EXIT')],
-        [sg.Text('Username:'), sg.Input(key='username')],
+        [sg.Text('Student ID:'), sg.Input(key='username')],
         [sg.Text('Password:'), sg.Input(key='password', password_char='*')],
         [sg.Column([[sg.Button('Log In'), sg.Text('Forgot Password?')]], justification='center')],
     ]
