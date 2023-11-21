@@ -5,6 +5,11 @@ CREATE TABLE Student (
     username varchar(80) NOT NULL
 );
 
+CREATE TABLE Student_takingcourses (
+    student_id varchar(10) NOT NULL,
+    course_id varchar(40) NOT NULL,
+);
+
 /* student information inserting into student values */
 INSERT INTO Student VALUES 
     ('3035678110', "kyoungmin2@connect.hku.hk", "qkrrudals123!@", "Jamie"),
@@ -16,6 +21,12 @@ INSERT INTO Student VALUES
     ('3035678116', "soheehee@connect.hku.hk", "dlathgml12!@","Helena"),
     ('3035678117', "yuhyun2@connect.hku.hk", "dldbgus123!@", "Mindy"),
     ('3035661360', "wngks873@connect.hku.hk", "1q2w3e4r!!", "joe");
+
+/* student information in who's taking which courses */
+
+INSERT INTO Student_takingcourses VALUES
+    ('3035678110', '{"COMP3278", "ELEC3143", "MECH2407", "ELEC2243", "BSTC2022"}'),
+    ('3035678111', '{"COMP3278", "GEOG1021", "MECH4412", "IMSE4175"}');
 
 CREATE TABLE Course (
     course_id varchar(8) NOT NULL,
@@ -97,11 +108,11 @@ INSERT INTO LogIn_Time VALUES
     ('3035678117', '2023-11-20', "12:00:00", '2023-11-20', "12:00:00"),
     ('3035661360', '2023-11-20', "12:00:00", '2023-11-20', "12:00:00");
 
-CREATE TABLE Record (
+/* CREATE TABLE Record (
     currtime timestamp NOT NULL,
     login_duration time NOT NULL,
     student_id int NOT NULL
-);
+); */
 
 CREATE TABLE TimeTable (
     table_id int NOT NULL,
