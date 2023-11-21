@@ -18,7 +18,8 @@ class HomeWindow(Tk):
         PASSWORD = StringVar()
 
         self._Header = PhotoImage(file="assets/image/HEADER5.png")
-        self._HeaderLabel = Label(self, image=self._Header, height=300, width=300).place(x=500, y=2000)
+        self._HeaderLabel = Label(self, image=self._Header, height=300, width=300)
+        self._HeaderLabel.place(x=500, y=2000)
 
         self._Footer = PhotoImage(file="assets/image/FOOTER.png")
 

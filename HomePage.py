@@ -4,7 +4,6 @@ import mysql.connector
 import PySimpleGUI as sg
 import pickle
 import datetime
-import login_page
 import sys
 import PySimpleGUI as sg
 import time
@@ -12,6 +11,7 @@ from tkinter import *
 import sqlite3
 import tkinter.ttk as ttk
 from tkinter import messagebox
+import sqlite3
 
 
 # GLOBAL VARIABLE
@@ -25,7 +25,7 @@ class HomePage(Tk):
         self.id = id
         Tk.__init__(self, *main, **master)
 
-        self.geometry('1280x720')
+        self.geometry('1280x800')
         self.resizable(0, 0)
         self.title('Student Login')
         self.config(bg='white')
@@ -35,7 +35,7 @@ class HomePage(Tk):
         USERNAME = StringVar()
         PASSWORD = StringVar()
 
-        self._Header = PhotoImage(file="assets/image/HEADER5.png")
+        _Header = PhotoImage(file="./assets/image/HEADER5.png")
         self._HeaderLabel = Label(self, image=self._Header, height=300, width=300).place(x=500, y=2000)
 
         self._Footer = PhotoImage(file="assets/image/FOOTER.png")
@@ -69,7 +69,7 @@ class HomePage(Tk):
         self._Button2 = Button(self, image=self._Button2_image, width=160, height=40, bg='#3C6739')
         self._Button2.place(x=10, y=375)
 
-        self._Button3_image = PhotoImage(file='/Users/zec/Desktop/Zoom.png')
+        self._Button3_image = PhotoImage(file='assets/image/Zoom.png')
         self._Button3 = Button(self, image=self._Button3_image, width=150, height=40, bg='#3C6739')
         self._Button3.place(x=10, y=420)
 
@@ -91,6 +91,9 @@ class HomePage(Tk):
         self._Button7.place(x=10, y=620)
 
 
-def openHomepage(id):
+def openHomePage(id):
     app = HomePage(id)
     app.mainloop()
+
+if __name__ == "__main__":
+    openHomePage(3035661360)

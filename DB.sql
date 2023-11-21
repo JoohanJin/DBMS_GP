@@ -55,18 +55,18 @@ CREATE TABLE Record (
 
 CREATE TABLE TimeTable (
     table_id int NOT NULL,
-    student_id int NOT NULL,
-    time_table_image LONGBLOB NOT NULL
+    student_id VARCHAR(10) NOT NULL,
+    time_table_image LONGBLOB
 );
 
 /* student timetable information inserting in with images */
 
 INSERT INTO TimeTable VALUES 
-    (1, 3035678110, LOAD_FILE('/project_DB/timetable_1.png')),
-    (2, 3035678111, LOAD_FILE('/project_DB/timetable_2.png')),
-    (3, 3035678112, LOAD_FILE('/project_DB/timetable_3.png')),
-    (4, 3035678113, LOAD_FILE('/project_DB/timetable_4.png')),
-    (5, 3035678114, LOAD_FILE('/project_DB/timetable_5.png')),
-    (6, 3035678115, LOAD_FILE('/project_DB/timetable_6.png')),
-    (7, 3035678116, LOAD_FILE('/project_DB/timetable_7.png')),
-    (8, 3035678117, LOAD_FILE('/project_DB/timetable_8.png'));
+    (1, "3035678110", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_1.png')),
+    (2, "3035678111", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_2.png')),
+    (3, "3035678112", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_3.png')),
+    (4, "3035678113", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_4.png')),
+    (5, "3035678114", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_5.png')),
+    (6, "3035678115", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_6.png')),
+    (7, "3035678116", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_7.png')),
+    (8, "3035678117", LOAD_FILE('/home/joe/HKU/dbms_pro/assets/images/timetable_8.png'));
