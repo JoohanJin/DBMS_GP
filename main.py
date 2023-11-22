@@ -126,7 +126,7 @@ class HomePage:
 
         self._Footer = PhotoImage(file="assets/image/FOOTER.png")
 
-        self._HeadLabel = Label(self.root, text='abc', width=100, height=100, bg='#3C6739').place(x=-5500, y=1000)
+        self._HeadLabel = Label(self.root, text='abc', width=150, height=100, bg='#3C6739').place(x=-5500, y=1000)
         self._background = PhotoImage(file='assets/image/Background.gif')
 
 
@@ -143,8 +143,8 @@ class HomePage:
         self._dashboard_label.place(x=0, y=85)
 
         # Create buttons for the dashboard
-        self._profile_image = PhotoImage(file='assets/image/12.png')
-        self._profile_image_label = Label(self.root, image=self._profile_image, width=100, height=100, bg='#3C6739')
+        self._profile_image = PhotoImage(file='assets/image/ProfileFi.png')
+        self._profile_image_label = Label(self.root, image=self._profile_image, width=100, height=140, bg='#3C6739')
         self._profile_image_label.place(x=40, y=100)
         
         self._Button1_image = PhotoImage(file='assets/image/Time.png')
