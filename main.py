@@ -103,7 +103,7 @@ class HomePage:
             timetable_image = Image.open(image_stream)
             self._image = ImageTk.PhotoImage(timetable_image)
         else:
-            self._image = PhotoImage(file='assets/image/HomeBackground.gif')
+            self._image = PhotoImage(file='assets/image/Timetable_9.png')
 
 
         self.root.geometry('1280x800')
@@ -124,7 +124,7 @@ class HomePage:
         self.HeaderLabel = Label(self.root, image=head_img, height=300, width=300)#.place(x=500, y=2000)
         self.HeaderLabel.place(x=500, y = 2000)
 
-        self._Footer = PhotoImage(file="assets/image/FOOTER.png")
+        self._Footer = PhotoImage(file="assets/image/FOOTER2.png")
 
         self._HeadLabel = Label(self.root, text='abc', width=150, height=100, bg='#3C6739').place(x=-5500, y=1000)
         self._background = PhotoImage(file='assets/image/Background.gif')
