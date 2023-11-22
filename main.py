@@ -223,37 +223,37 @@ class LogInPage:
     def __init__(self):
         self.root = Tk()
         self.root.title("Login Form")
-        self.root.geometry("550x550")  # Set the size of the window
+        self.root.geometry("550x500")  # Set the size of the window
 
         # Load background image
-        self.bg_image = ImageTk.PhotoImage(Image.open("assets/image/HKU.png"))
+        self.bg_image = ImageTk.PhotoImage(Image.open("assets/image/HKURe.png"))
         self.bg_label = Label(self.root, image=self.bg_image)
         self.bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Create labels
-        self.username_image = ImageTk.PhotoImage(Image.open("assets/image/User.png"))
+        self.username_image = ImageTk.PhotoImage(Image.open("assets/image/UserRe.png"))
         self.label_username = Label(self.root, image=self.username_image, height=45, width=90, bg='gray')
-        self.label_username.place(x=130, y=330, anchor=CENTER)
+        self.label_username.place(x=150, y=330, anchor=CENTER)
 
-        self.password_image = ImageTk.PhotoImage(Image.open("assets/image/PW.png"))
+        self.password_image = ImageTk.PhotoImage(Image.open("assets/image/PWRe.png"))
         self.label_password = Label(self.root, image=self.password_image, height=45, width=90, bg='white')
-        self.label_password.place(x=130, y=430, anchor=CENTER)
+        self.label_password.place(x=150, y=430, anchor=CENTER)
 
         # Create input fields
         self.entry_username = Entry(self.root, bg="white", relief=FLAT)
-        self.entry_username.place(x=130, y=370, anchor=CENTER)
+        self.entry_username.place(x=150, y=370, anchor=CENTER)
 
 
         self.entry_password = Entry(self.root, bg="white", show="*", relief=FLAT)
-        self.entry_password.place(x=130, y=470, anchor=CENTER)
+        self.entry_password.place(x=150, y=470, anchor=CENTER)
 
         # Create login button
-        login_image = ImageTk.PhotoImage(Image.open("assets/image/login2.png"))
+        login_image = ImageTk.PhotoImage(Image.open("assets/image/loginRe.png"))
         login_button = Button(self.root, image=login_image, command=self.manual_login, height=40, width=90, bg='white')
         login_button.place(x=380, y=450, anchor=CENTER)
 
         # Load image for another button
-        image = ImageTk.PhotoImage(Image.open("assets/image/loginface.png"))
+        image = ImageTk.PhotoImage(Image.open("assets/image/loginfaceRe.png"))
 
         # Create button with image and circular border
         image_button = Button(self.root, command=self.auto_login, image=image, height=78, width=100, bg='white')
