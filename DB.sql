@@ -2,7 +2,7 @@ CREATE TABLE Student (
     student_id varchar(10) NOT NULL,
     email varchar(60) NOT NULL,
     pwd varchar(80) NOT NULL,
-    username varchar(80) NOT NULL
+    username varchar(80) NOT NULL,
     PRIMARY KEY(student_id)
 )ENGINE = INNODB;
 
@@ -22,7 +22,8 @@ INSERT INTO Student VALUES
 CREATE TABLE Course_taken (
     student_id varchar(10) NOT NULL,
     course_id varchar(1024) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES Student (student_id)
+    FOREIGN KEY(student_id) REFERENCES Student (student_id),
+    FOREIGN KEY(course_id) REFERENCES Course (course_id)
 )ENGINE = INNODB;
 
 /* student information in who's taking which courses */
@@ -40,8 +41,9 @@ CREATE TABLE Course (
     course_start_time time NOT NULL,
     course_end_time time NOT NULL,
     class_day varchar(16),
-    class_location varchar(10)
-);
+    class_location varchar(10),
+    PRIMARY KEY(course_id)
+)ENGINE = INNODB;
 
 INSERT INTO Course VALUES
     ("COMP3278", "Introduction to database management systems", "Welcome to the course COMP3278", "Check the website", 
@@ -123,8 +125,9 @@ CREATE TABLE LogIn_Time (
     login_date date NOT NULL,
     login_time time NOT NULL,
     logout_date date NOT NULL,
-    logout_time time NOT NULL
-);
+    logout_time time NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES Student (student_id)
+)ENGINE = INNODB;
 
 INSERT INTO LogIn_Time VALUES
     ('3035678110', '2023-11-20', "12:00:00", '2023-11-20', "12:00:00"),
@@ -146,8 +149,10 @@ INSERT INTO LogIn_Time VALUES
 CREATE TABLE TimeTable (
     table_id int NOT NULL,
     student_id VARCHAR(10) NOT NULL,
-    time_table_image LONGBLOB
-);
+    time_table_image LONGBLOB,
+    PRIMARY KEY(table_id),
+    FOREIGN KEY(student_id) REFERENCES Student (student_id)
+)ENGINE = INNODB;
 
 /* student timetable information inserting in with images */
 
