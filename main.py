@@ -81,14 +81,37 @@ class HomePage:
         courses_to_take = course_codes_taking[0].strip('{}').split()
         current_datetime = datetime.datetime.fromtimestamp(current_time)
         day_info = current_datetime.strftime("%A")
-        print(day_info)
+        day_info = "Friday"
 
+        course_today = []
+        self.urgent_lecture = None
+        self.urgent = False
         query = "SELECT course_id, course_start_time, class_day FROM Course WHERE course_id = %s"
         for course in courses_to_take:
             val = (course, )
             cursor.execute(query, val)
             result = cursor.fetchall()
-            print(result)
+            for i in result:
+                if i[2] == day_info:
+                    course_today.append((i[0], i[1]))
+        
+
+        print(course_today)
+
+        for course in course_today:
+            course_timestamp = datetime.datetime.combine(datetime.date.today(), datetime.time()).timestamp() + course[1].total_seconds()
+            time_difference = course_timestamp - time.time()
+            print(time_difference)
+            if 0<= time_difference <= 3600:
+                self.urgent = True
+                self.urgent_lecture = course
+                break
+        print(self.urgent_lecture)
+
+        self.urgent_lecture = course[0]
+
+        self.urgent = True
+
             
 
 
@@ -103,7 +126,7 @@ class HomePage:
             timetable_image = Image.open(image_stream)
             self._image = ImageTk.PhotoImage(timetable_image)
         else:
-            self._image = PhotoImage(file='assets/image/Timetable_9.png')
+            self._image = PhotoImage(file='assets/image/Timetable_10.png')
 
 
         self.root.geometry('1280x800')
@@ -131,7 +154,7 @@ class HomePage:
 
 
         self._Label1 = Label(self.root, image=self._background).place(x=0, y=0)
-        self._Label2 = Label(self.root, image=self._image).place(relx=0.5, rely=0.5, anchor='center', height=450, width=920)
+        self._Label2 = Label(self.root, image=self._image).place(x=700, y=400, anchor='center', height=520, width=870)
 
         self._HeaderLabel = Label(self.root, image=head_img, text='Teacher', width=1277, height=80, bg='#3C6739').place(
             x=0, rely=0)
@@ -173,8 +196,25 @@ class HomePage:
         self._Button6.place(x=10, y=520)
 
         self._Button7_image = PhotoImage(file='assets/image/log3.png')
-        self._Button7 = Button(self.root, image=self._Button7_image, width=160, height=50, bg='#3C6739')
+        self._Button7 = Button(self.root, image=self._Button7_image,command=self.on_close,width=160, height=50, bg='#3C6739')
         self._Button7.place(x=10, y=620)
+
+        welcome_message = f"Hello, {self.student_name}! Welcome to HKU Student Course Management System!"
+        self.text_label = Label(self.root, text=welcome_message , font=('Times New Roman', 8), fg='Green', bg='white', compound ='center')
+        self.text_label.place(x=450, y=100, anchor='center')
+
+        log_message = f"Your last login time was {last_login_datestamp} {last_login_timestamp}"
+        self.text_label2 = Label(self.root, text=log_message, font=('Times New Roman', 8), fg='Green', bg='black', compound ='center')
+        self.text_label2.place(x=1100, y=700, anchor='center')
+        
+                
+        # When the user logs out
+          
+
+        self.text_label2.config(text=log_message)
+
+        if (self.urgent):
+            CourseGUI(self.root, self.student_email, self.urgent_lecture)
 
         self.root.protocol('WM_DELETE_WINDOW', self.on_close)
         self.root.mainloop()
@@ -217,6 +257,116 @@ class HomePage:
             db_connection.commit()
 
             self.root.destroy()
+            
+class CourseGUI(Toplevel):
+    def __init__(self, master, email, course):
+        Toplevel.__init__(self, master)
+        self.email = email
+        self.course = course
+
+        query = "SELECT course_name, teacher_message, tutorial_notes, course_start_time, class_location, course_website_link FROM Course WHERE course_id = %s"
+        val = (course, )
+
+        cursor.execute(query, val)
+        result = cursor.fetchall()
+
+        self.course_name = result[0][0]
+        self.prof_msg = result[0][1]
+        self.note = result[0][2]
+        self.time = result[0][3]
+        self.loc = result[0][4]
+        self.course_link = result[0][5]
+
+        
+
+
+
+        self.geometry('500x570')
+        self.resizable(0, 0)
+        self.title('Notifications')
+        self.config(bg='#333333')
+
+        self._background = PhotoImage(file='assets/image/notiback3.png')
+        self._Label1 = Label(self,  image=self._background).place(x=0, y=0)
+
+        # Create labels for course information
+        label_font = ("Times New Roman", 14, "bold")  # Set the font for the labels
+
+        self._course_label_image = PhotoImage(file='assets/image/noticourse.png')
+        self.course_label = Label(self, image=self._course_label_image, width=150, height=40, bg='#3C6739')
+        self.course_label.place(x=50, y=20, anchor=CENTER)
+
+        self.address_label_image = PhotoImage(file='assets/image/notiaddre.png')
+        self.address_label = Label(self, image=self.address_label_image, width=200, height=30, bg='#3C6739')
+        self.address_label.place(x=110, y=80, anchor=CENTER)
+
+        self.message_label_image = PhotoImage(file='assets/image/notiteacher.png')
+        self.message_label = Label(self, image=self.message_label_image, width=210, height=30, bg='#3C6739')
+        self.message_label.place(x=115, y=140, anchor=CENTER)
+
+
+        self.zoom_label_image = PhotoImage(file='assets/image/notizoom.png')
+        self.zoom_label = Label(self, image=self.zoom_label_image, width=120, height=40, bg='#3C6739')
+        self.zoom_label.place(x=60, y=210, anchor=CENTER)
+
+
+        self.notes_label_image = PhotoImage(file='assets/image/notilec.png')
+        self.notes_label = Label(self, image=self.notes_label_image, width=190, height=40, bg='#3C6739')
+        self.notes_label.place(x=110, y=250, anchor=CENTER)
+
+        # Create buttons for Zoom and Lecture Notes
+
+        self.zoom_button_image = PhotoImage(file='assets/image/notijoin.png')
+        self.zoom_button = Button(self, image=self.zoom_button_image, width=150, height=40, bg='#3C6739', command=self.open_zoom)
+        self.zoom_button.place(x=50, y=300, anchor=CENTER)
+
+        self.notes_button_image = PhotoImage(file='assets/image/notiview.png')
+        self.notes_button = Button(self, image=self.notes_button_image, width=150, height=40, bg='#3C6739', command=self.open_notes)
+        self.notes_button.place(x=70, y=350, anchor=CENTER)
+
+
+        # Create email entry and send button
+
+        self.send_button_image = PhotoImage(file='assets/image/SendEmail.png')
+        self.send_button = Button(self, image=self.send_button_image, command=self.send_email)
+        self.send_button.place(x=230, y=410, anchor=CENTER)
+
+        
+
+
+    def open_zoom(self):
+        zoom_link = "https://zoom.us/join"  # Replace with the actual Zoom link
+        webbrowser.open(zoom_link)
+
+    def open_notes(self):
+        notes_link = "https://example.com/lecture-notes"  # Replace with the actual lecture notes link
+        webbrowser.open(notes_link)
+
+
+    def send_email(self):
+        email = self.email
+        if email.endswith("@connect.hku.hk"):
+            email = "wngks8730@gmail.com"
+
+        subject = "Course Information"
+        message = f"Course: {self.course_name}\n" \
+                f"Classroom Address: {self.loc}\n" \
+                f"Teacher's Message: {self.prof_msg}\n"                f"Course Link: {self.course_link}\n" \
+                f"Lecture Notes: {self.note}\n"
+
+
+        msg = EmailMessage()
+        msg.set_content(message)
+        msg['Subject'] = subject
+        msg['From'] = email  # Replace with your email address
+        msg['To'] = email
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login("wngks8730@gmail.com", "lirv dgwp epse olev")  # Replace with your email / pw
+            server.send_message(msg)
+        print(f"email sent to {email}")
+
 
 
 class LogInPage:
