@@ -4,7 +4,7 @@ CREATE TABLE Student (
     pwd varchar(80) NOT NULL,
     username varchar(80) NOT NULL
     PRIMARY KEY(student_id)
-);
+)ENGINE = INNODB;
 
 /* student information inserting into student values */
 INSERT INTO Student VALUES 
@@ -21,8 +21,9 @@ INSERT INTO Student VALUES
 
 CREATE TABLE Course_taken (
     student_id varchar(10) NOT NULL,
-    course_id varchar(1024) NOT NULL
-);
+    course_id varchar(1024) NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES Student (student_id)
+)ENGINE = INNODB;
 
 /* student information in who's taking which courses */
 INSERT INTO Student_takingcourses VALUES
