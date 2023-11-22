@@ -18,7 +18,7 @@ INSERT INTO Student VALUES
     ('3035661360', "wngks873@connect.hku.hk", "1q2w3e4r!!", "joe");
 
 
-CREATE TABLE Student_takingcourses (
+CREATE TABLE Course_taken (
     student_id varchar(10) NOT NULL,
     course_id varchar(1024) NOT NULL
 );
@@ -34,7 +34,7 @@ CREATE TABLE Course (
     course_name varchar(512) NOT NULL,
     teacher_message text NOT NULL,
     tutorial_notes text NOT NULL,
-    course_website_link varchar(512) NOT NULL,
+    course_link varchar(512) NOT NULL,
     course_start_time time NOT NULL,
     course_end_time time NOT NULL,
     class_day varchar(16),
