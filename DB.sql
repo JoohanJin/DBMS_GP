@@ -3,6 +3,7 @@ CREATE TABLE Student (
     email varchar(60) NOT NULL,
     pwd varchar(80) NOT NULL,
     username varchar(80) NOT NULL
+    PRIMARY KEY(student_id)
 );
 
 /* student information inserting into student values */
